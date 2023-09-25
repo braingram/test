@@ -1,0 +1,17 @@
+name: test
+
+on:
+  release:
+    types: [ released ]
+  workflow_dispatch:
+
+
+jobs:
+  echo-stuff:
+    runs-on: ubuntu-latest
+    steps:
+    - name: echo
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
