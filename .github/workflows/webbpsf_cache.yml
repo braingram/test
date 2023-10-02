@@ -11,6 +11,9 @@ jobs:
     env:
       DATA_PATH: /tmp/data
       WEBBPSF_DATA_URL: https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz
+    outputs:
+      path: ${{ steps.cache_path.outputs.path }}
+      hash: ${{ steps.data_hash.outputs.hash }}
     steps:
       - id: cache_path
         run: |
