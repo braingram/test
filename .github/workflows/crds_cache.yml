@@ -54,8 +54,7 @@ jobs:
       #  cache-key: data-${{ needs.data.outputs.data_hash }}-${{ needs.data.outputs.crds_context }}
       #  cache-restore-keys: webbpsf-${{ needs.data.outputs.data_hash }}
   report:
-    needs: |
-      data
+    needs: [ data ]
     name: report stuff
     runs-on: ubuntu-latest
     steps:
