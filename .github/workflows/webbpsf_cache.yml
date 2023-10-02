@@ -1,0 +1,34 @@
+name: check/updatewebbpsf cache
+
+on:
+  # TODO also cron
+  workflow_dispatch:
+
+jobs:
+  webbpsf-data:
+    name: fetch, check, and possibly update WEBBPSF data cache
+    runs-on: ubuntu-latest
+    env:
+      DATA_PATH: /tmp/data
+      WEBBPSF_DATA_URL: https://stsci.box.com/shared/static/qxpiaxsjwo15ml6m4pkhtk36c9jgj70k.gz
+    steps:
+      = id: cache_path
+        run: |
+          echo "path=${{ DATA_PATH }}" >> $GITHUB_OUTPUT
+      - id: data_hash
+        run: |
+          # make a temporary directory where webbpsf data will be unpacked
+          mkdir -p tmp/data
+          wget ${{ env.WEBBPSF_DATA_URL }} -O tmp/webbpsf-data.tar.gz
+          tar -xzvf tmp/webbpsf-data.tar.gz -C tmp/data/
+          echo "hash=${{ hashFiles( 'tmp/data' ) }}" >> $GITHUB_OUTPUT
+
+      - id: cache_check
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.cache_path.outputs.path }}
+          key: webbpsf-${{ steps.data_hash.outputs.hash }}
+      - if: ${{ steps.cache_check.outputs.cache-hit != 'true' }}
+        name: Initialize cache
+        run: |
+          mv tmp/data/* ${{ steps.data.outputs.path }}

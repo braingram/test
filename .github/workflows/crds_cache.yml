@@ -1,0 +1,55 @@
+name: crds cache
+
+on:
+  workflow_dispatch:
+
+jobs:
+  data:
+    name: retrieve current CRDS context (add to WEBBPSF data in cache)
+    runs-on: ubuntu-latest
+    env:
+      OBSERVATORY: roman
+      CRDS_SERVER_URL: https://roman-crds.stsci.edu
+      CRDS_PATH: /tmp/data
+    outputs:
+      data_path: ${{ steps.data.outputs.path }}
+      webbpsf_path: ${{ steps.webbpsf_path.outputs.path }}
+      data_hash: ${{ steps.data_hash.outputs.hash }}
+      crds_path: ${{ steps.crds_path.outputs.path }}
+      crds_context: ${{ steps.crds_context.outputs.pmap }}
+      crds_server: ${{ steps.crds_server.outputs.url }}
+    steps:
+      # crds:
+      - id: crds_path
+        run: echo "path=${{ env.CRDS_PATH }}" >> $GITHUB_OUTPUT
+      - id: crds_server
+        run: echo "url=${{ env.CRDS_SERVER_URL }}" >> $GITHUB_OUTPUT
+      - id: crds_context
+        run: >
+          echo "pmap=$(
+          curl -s -X POST -d '{"jsonrpc": "1.0", "method": "get_default_context", "params": ["${{ env.OBSERVATORY }}"], "id": 1}' ${{ env.CRDS_SERVER_URL }}/json/ |
+          python -c "import sys, json; print(json.load(sys.stdin)['result'])"
+          )" >> $GITHUB_OUTPUT
+        # Get default CRDS_CONTEXT without installing crds client
+        # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
+      # webbpsf:
+      - id: data_hash
+        run: |
+          # use actions/gh-actions-cache to allow filtering by key
+          gh extension install actions/gh-actions-cache
+
+          # get most recent webbpsf hash (from the cache key)
+          #WEBBPSF_HASH=$(gh actions-cache list --key webbpsf- --sort created_at | cut -f 1 | head -n 1 | cut -d "-" -f 2)
+          
+          echo "hash=$(
+            gh actions-cache list --key webbpsf- --sort created_at
+            | cut -f 1
+            | head -n 1
+            | cut -d '-' -f 2
+            )" >> $GITHUB_OUTPUT
+      - id: webbpsf_path
+        run: echo "path=${{ steps.data.outputs.path }}/webbpsf-data" >> $GITHUB_OUTPUT
+      # could now run with
+      #  cache-path: ${{ needs.data.outputs.data_path }}
+      #  cache-key: data-${{ needs.data.outputs.data_hash }}-${{ needs.data.outputs.crds_context }}
+      #  cache-restore-keys: webbpsf-${{ needs.data.outputs.data_hash }}
