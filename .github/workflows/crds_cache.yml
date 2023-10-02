@@ -11,6 +11,7 @@ jobs:
       OBSERVATORY: roman
       CRDS_SERVER_URL: https://roman-crds.stsci.edu
       CRDS_PATH: /tmp/data
+      GH_TOKEN: ${{ github.token }}
     outputs:
       data_path: ${{ steps.data.outputs.path }}
       webbpsf_path: ${{ steps.webbpsf_path.outputs.path }}
