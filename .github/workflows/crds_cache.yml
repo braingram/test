@@ -40,14 +40,7 @@ jobs:
           gh extension install actions/gh-actions-cache
 
           # get most recent webbpsf hash (from the cache key)
-          #WEBBPSF_HASH=$(gh actions-cache list --key webbpsf- --sort created_at | cut -f 1 | head -n 1 | cut -d "-" -f 2)
-          
-          echo "hash=$(
-            gh actions-cache list --key webbpsf- --sort created_at
-            | cut -f 1
-            | head -n 1
-            | cut -d '-' -f 2
-            )" >> $GITHUB_OUTPUT
+          echo "hash=$(gh actions-cache list --key webbpsf- --sort created_at | cut -f 1 | head -n 1 | cut -d '-' -f 2)" >> $GITHUB_OUTPUT
       - id: webbpsf_path
         run: echo "path=${{ steps.data.outputs.path }}/webbpsf-data" >> $GITHUB_OUTPUT
       # could now run with
