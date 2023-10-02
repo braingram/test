@@ -20,6 +20,8 @@ jobs:
       crds_context: ${{ steps.crds_context.outputs.pmap }}
       crds_server: ${{ steps.crds_server.outputs.url }}
     steps:
+      - id: data
+        run: echo "path=${{ env.CRDS_PATH }}" >> $GITHUB_OUTPUT
       # crds:
       - id: crds_path
         run: echo "path=${{ env.CRDS_PATH }}" >> $GITHUB_OUTPUT
@@ -51,6 +53,12 @@ jobs:
       #  cache-path: ${{ needs.data.outputs.data_path }}
       #  cache-key: data-${{ needs.data.outputs.data_hash }}-${{ needs.data.outputs.crds_context }}
       #  cache-restore-keys: webbpsf-${{ needs.data.outputs.data_hash }}
+  report:
+    needs: |
+      data
+    name: report stuff
+    runs-on: ubuntu-latest
+    steps:
       - id: report
         run: |
           echo "cache-path: ${{ needs.data.outputs.data_path }}"
