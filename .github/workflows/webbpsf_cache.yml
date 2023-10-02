@@ -14,7 +14,7 @@ jobs:
     steps:
       - id: cache_path
         run: |
-          echo "path=${{ DATA_PATH }}" >> $GITHUB_OUTPUT
+          echo "path=${{ env.DATA_PATH }}" >> $GITHUB_OUTPUT
       - id: data_hash
         run: |
           # make a temporary directory where webbpsf data will be unpacked
