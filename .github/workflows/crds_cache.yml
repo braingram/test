@@ -51,3 +51,8 @@ jobs:
       #  cache-path: ${{ needs.data.outputs.data_path }}
       #  cache-key: data-${{ needs.data.outputs.data_hash }}-${{ needs.data.outputs.crds_context }}
       #  cache-restore-keys: webbpsf-${{ needs.data.outputs.data_hash }}
+      - id: report
+        run: |
+          echo "cache-path: ${{ needs.data.outputs.data_path }}"
+          echo "cache-key: data-${{ needs.data.outputs.data_hash }}-${{ needs.data.outputs.crds_context }}"
+          echo "cache-restore-keys: webbpsf-${{ needs.data.outputs.data_hash }}"
