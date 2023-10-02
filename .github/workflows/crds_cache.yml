@@ -34,6 +34,10 @@ jobs:
         # Get default CRDS_CONTEXT without installing crds client
         # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
       # webbpsf:
+      # checkout repo (required for gh below, might be possible to do this with arguments to gh)
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - id: data_hash
         run: |
           # use actions/gh-actions-cache to allow filtering by key
