@@ -31,5 +31,4 @@ jobs:
       - if: ${{ steps.cache_check.outputs.cache-hit != 'true' }}
         name: Initialize cache
         run: |
-          tar -xzvf tmp/webbpsf-data.tar.gz -C tmp/data/
-          mv tmp/data/* ${{ steps.data.outputs.path }}
+          tar -xzvf tmp/webbpsf-data.tar.gz -C ${{ steps.data.outputs.path }}
