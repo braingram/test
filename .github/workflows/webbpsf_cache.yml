@@ -20,12 +20,11 @@ jobs:
           echo "path=${{ env.DATA_PATH }}" >> $GITHUB_OUTPUT
       - id: data_hash
         run: |
-          # make a temporary directory where webbpsf data will be unpacked
           mkdir -p tmp/data
           wget ${{ env.WEBBPSF_DATA_URL }} -O tmp/webbpsf-data.tar.gz
           tar -xzvf tmp/webbpsf-data.tar.gz -C tmp/data/
+          echo "${{ hashFiles( 'tmp/data' ) }}"
           echo "hash=${{ hashFiles( 'tmp/data' ) }}" >> $GITHUB_OUTPUT
-
       - id: cache_check
         uses: actions/cache@v3
         with:
