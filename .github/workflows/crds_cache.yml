@@ -42,10 +42,7 @@ jobs:
           gh extension install actions/gh-actions-cache
 
           # get most recent webbpsf hash (from the cache key)
-          CACHES=$(gh actions-cache list -R braingram/test -B main --key webbpsf- --sort created-at)
-          echo "CACHES=$CACHES"
-
-          RECENT=$(echo $CACHES | cut -f 1 | head -n 1)
+          RECENT=$(gh actions-cache list -R braingram/test -B main --key webbpsf- --sort created-at | cut -f 1 | head -n 1)
           echo "RECENT=$RECENT"
 
           HASH=$(echo $RECENT | cut -d '-' -f 2)
