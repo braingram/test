@@ -49,7 +49,7 @@ jobs:
           echo $RECENT
           echo $HASH
           echo "hash=$HASH" >> $GITHUB_OUTPUT
-          if [ "$HASH" != '' ] exit 1
+          if [ "$HASH" == '' ]; exit 1
       - id: webbpsf_path
         run: echo "path=${{ steps.data.outputs.path }}/webbpsf-data" >> $GITHUB_OUTPUT
       # could now run with
