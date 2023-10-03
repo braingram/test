@@ -36,17 +36,20 @@ jobs:
         # Get default CRDS_CONTEXT without installing crds client
         # See https://hst-crds.stsci.edu/static/users_guide/web_services.html#generic-request
       # webbpsf:
-      # checkout repo (required for gh below, might be possible to do this with arguments to gh)
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - id: data_hash
         run: |
           # use actions/gh-actions-cache to allow filtering by key
           gh extension install actions/gh-actions-cache
 
           # get most recent webbpsf hash (from the cache key)
-          echo "hash=$(gh actions-cache list --key webbpsf- --sort created-at | cut -f 1 | head -n 1 | cut -d '-' -f 2)" >> $GITHUB_OUTPUT
+          CACHES=$(gh actions-cache list -R braingram/test -B main --key webbpsf- --sort created-at)
+          RECENT=$(echo $CACHES | cut -f 1 | head -n 1)
+          HASH=$(echo $RECENT | cut -d '-' -f 2)
+          echo $CACHES
+          echo $RECENT
+          echo $HASH
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+          if [ "$HASH" != '' ] exit 1
       - id: webbpsf_path
         run: echo "path=${{ steps.data.outputs.path }}/webbpsf-data" >> $GITHUB_OUTPUT
       # could now run with
