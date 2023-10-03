@@ -43,13 +43,13 @@ jobs:
 
           # get most recent webbpsf hash (from the cache key)
           CACHES=$(gh actions-cache list -R braingram/test -B main --key webbpsf- --sort created-at)
-          echo "$CACHES"
+          echo "CACHES=$CACHES"
 
           RECENT=$(echo $CACHES | cut -f 1 | head -n 1)
-          echo "$RECENT"
+          echo "RECENT=$RECENT"
 
           HASH=$(echo $RECENT | cut -d '-' -f 2)
-          echo "$HASH"
+          echo "HASH=$HASH"
 
           echo "hash=$HASH" >> $GITHUB_OUTPUT
           #[ "$HASH" == '' ] && exit 1
